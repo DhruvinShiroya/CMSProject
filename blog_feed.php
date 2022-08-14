@@ -11,63 +11,54 @@
 </head>
 
 <body>
-    <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid ">
-            <a class="navbar-brand" href="blog_feed.php"><img src="pictures\blogger-logo-icon.png" alt="Blogger logo"></a>
-            <div class="navbar-collapse collapse " id="navbarNav">
-                <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="index.php">Home</a>
-                </li>
-                <?php echo"
-                <li class='nav-item'>
-                    <a class='nav-link' href='create_blog.php?user_id=1&post_id='>Create Blog</a>
-                </li>
-                <li class='nav-item'>
-                    <a class='nav-link' href='blog_feed.php?user_id=1'>Blogs</a>
-                </li>";
-                ?>
-                </ul>
-            </div>
-            </div>
-        </nav>
-    </header>
+    <?php require_once("header.php") ?>
     <main>
         <?php
-            $user_id = null;
-            $user_post = null;
-            $post_datetime = null;
-            $post_text = null;
-            $post_title = null;
+        session_start();
+        $user_id = null;
+        $user_post = null;
+        $post_datetime = null;
+        $post_text = null;
+        $post_title = null;
 
-            // connect to  the database
-            require_once('connection.php');
+        // connect to  the database
+        require_once('connection.php');
 
-            // get the last record from the database
-            $sql = "SELECT * FROM user_posts ORDER BY date_time DESC LIMIT 10";
+        // get the last record from the database
+        $sql = "SELECT * FROM user_posts ORDER BY date_time DESC LIMIT 10";
 
-            // prepare the statemet
-            $query = $db->prepare($sql);
+        // prepare the statemet
+        $query = $db->prepare($sql);
 
-            // execute the query
-            $query->execute();
+        // execute the query
+        $query->execute();
 
-            // fetch all the result data and populate in the field;
+        // fetch all the result data and populate in the field;
 
-            $post_result = $query->fetchAll();
+        $post_result = $query->fetchAll();
 
-            // assign the value to the text area 
-            
-            // <img class='blog-box-image' src='pictures\anonymus.png' alt='Italian Trulli'>
-            foreach($post_result as $posts){
-                echo "<div class='blog-box  container pt-4 border border-secondary rounded'>
+        // assign the value to the text area 
+
+        // <img class='blog-box-image' src='pictures\anonymus.png' alt='Italian Trulli'>
+        foreach ($post_result as $posts) {
+            if (empty($posts['photo_location'])) {
+                $posts['photo_location'] = "anonymus.png";
+            }
+
+            if (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $posts['user_id']) {
+
+                echo "<div class='blog-box  container pt-4 pb-4 mt-4 mb-4 border border-secondary rounded'>
+                <div class='row'>
+                <div class=' col blog-box-content' style='height=300px' >
                 
-                <div class='blog-box-content' >
+                <img src='images/" . $posts['photo_location'] . "' alt='Blog image'  height='400px'' >
+                </div>
+                
+                <div class=' col blog-box-content' >
                     <div class='blog-box-title'>
                         <div>
 
-                            <h3>". $posts['category']." : ". $posts['post_title'] ."</h3>
+                            <h3>" . $posts['category'] . " : " . $posts['post_title'] . "</h3>
                         </div>
                         <div>
                             <h4> Anonymus </h4>
@@ -75,17 +66,17 @@
                         
                     </div>
                     <div class='blog-box-text container-lg' >
-                        <p>". $posts['post_text']."</P>
+                        <p>" . $posts['post_text'] . "</P>
                     </div>
                     <div class='blog-box-date'>
-                        <p>". $posts['date_time']."</P>
+                        <p>" . $posts['date_time'] . "</P>
                         
                         <p>
-                        <a  ' class='btn btn-danger' href='delete_post.php?user_id=" . $posts['user_id']."&post_id= ". $posts['post_id']."' onclick='return confirm(\" Are you sure? \");'>Delete Thread </a>
+                        <a  ' class='btn btn-danger' href='delete_post.php?user_id=" . $posts['user_id'] . "&post_id= " . $posts['post_id'] . "' onclick='return confirm(\" Are you sure? \");'>Delete Thread </a>
                         </p>
                         
                         <p>
-                        <a  class='btn btn-primary' href='create_blog.php?user_id=". $posts['user_id']."&post_id=". $posts['post_id']."' > Edit the blog </a>
+                        <a  class='btn btn-primary' href='create_blog.php?user_id=" . $posts['user_id'] . "&post_id=" . $posts['post_id'] . "' > Edit the blog </a>
                         </p>
 
 
@@ -93,21 +84,52 @@
                     <br>
                     
                 </div>
-                
+                </div>
                 
                 </div>";
+            } else {
+                echo "<div class='blog-box pt-4 pb-4 mt-4 mb-4  container pt-4 border border-secondary rounded'>
+                <div class='row'>
+                <div class=' col blog-box-content' style='height=300px' >
+                
+                <img src='images/" . $posts['photo_location'] . "' alt='Blog image'  height='400px'' >
+                </div>
+                <div class=' col blog-box-content' >
+                    <div class='blog-box-title'>
+                        <div>
 
+                            <h3>" . $posts['category'] . " : " . $posts['post_title'] . "</h3>
+                        </div>
+                        <div>
+                            <h4> Anonymus </h4>
+                        </div>
+                        
+                    </div>
+                    <div class='blog-box-text container-lg' >
+                        <p>" . $posts['post_text'] . "</P>
+                    </div>
+                    <div class='blog-box-date'>
+                        <p>" . $posts['date_time'] . "</P>
+                        
+                    </div>
+                    <br>
+                    
+                </div>
+                
+                </div>  
+                </div>";
             }
-            // close db connection
-            $query->closeCursor();
-            
+        }
+
+
+        // close db connection
+        $query->closeCursor();
+
 
         ?>
 
     </main>
-    <footer>
-
-    </footer>
+    <?php require_once("footer.php") ?>
 </body>
 
 </html>
