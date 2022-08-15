@@ -80,7 +80,7 @@ if (isset($_POST['login'])) {
                                 <input class="form-control" type="password" name="repassword" id="repassword" placeholder="Retype password" min="8" required>
                             </div>
 
-                            <!-- <div class="g-recaptcha" data-sitekey="6LcT3J4gAAAAAJn8yKRvPyKK1YaFg0OA4hMJB3M4" require></div> -->
+                            <div class="g-recaptcha" data-sitekey="6LcT3J4gAAAAAJn8yKRvPyKK1YaFg0OA4hMJB3M4" require></div>
                             <button type="submit" name="login" value="login" class="btn btn-primary mb-2">Sign Up</button>
 
 

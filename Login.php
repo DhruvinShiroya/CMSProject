@@ -66,7 +66,7 @@ if (isset($_POST['login'])) {
                     </div>
 
 
-                    <!-- <div class="g-recaptcha" data-sitekey="6LcT3J4gAAAAAJn8yKRvPyKK1YaFg0OA4hMJB3M4" require></div> -->
+                    <div class="g-recaptcha" data-sitekey="6LcT3J4gAAAAAJn8yKRvPyKK1YaFg0OA4hMJB3M4" require></div>
                     <button type="submit" name="login" value="login" class="btn btn-primary mb-2">Log in</button>
 
 
